@@ -5,12 +5,12 @@ password="PASSWORD"
 
 function put_file()
 {
-	curl -F "file=@$1" -F $2 -F "password=$PASSWORD" $host
+	curl -F "file=@$1" -F $2 -F "password=$password" $host
 }
 
 function put_text()
 {
-	curl -F "text=$1" -F $2 -F "password=$PASSWORD" $host
+	curl -F "text=$1" -F $2 -F "password=$password" $host
 }
 
 function usage()
@@ -31,7 +31,6 @@ if readlink /proc/$$/fd/0 | grep -q "^pipe:"; then
 fi
 
 if [ "$1" != '-f' -a "$1" != "-t" ]; then
-	echo "derp"
 	usage
 	exit 1
 fi
@@ -66,7 +65,7 @@ else
 fi
 
 if [ "$1" = "-f" ] ; then
-	put_file "@$2" "$OPT=$5"
-else
 	put_file "$2" "$OPT=$5"
+else
+	put_text "$2" "$OPT=$5"
 fi
