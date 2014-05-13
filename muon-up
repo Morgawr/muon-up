@@ -16,13 +16,12 @@ function put_text()
 function usage()
 {
 	echo "Usage to upload a file:"
-	echo "\tmuon-up -f filename -o [visits|time] <parameter>"
+	echo -e "\tmuon-up -f filename -o [visits|time] <parameter>"
 	echo "Usage to upload text:"
-	echo "\tmuon-up -t \"text\" -o [visits|time] <parameter>"
+	echo -e "\tmuon-up -t \"text\" -o [visits|time] <parameter>"
 	echo 
-	echo "Either 'visits' or 'time' is required as an option, plus a  
-	parameter specifying the amount of clicks or duration until the link
-	expires."
+	echo "Either 'visits' or 'time' is required as an option, plus a  parameter"
+	echo "specifying the amount of clicks or duration until the link expires."
 }
 
 if readlink /proc/$$/fd/0 | grep -q "^pipe:"; then
@@ -31,7 +30,8 @@ if readlink /proc/$$/fd/0 | grep -q "^pipe:"; then
 	exit 1
 fi
 
-if [ "$1" != '-f' -o "$1" != "-t" ]; then
+if [ "$1" != '-f' -a "$1" != "-t" ]; then
+	echo "derp"
 	usage
 	exit 1
 fi
