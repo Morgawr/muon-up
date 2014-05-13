@@ -1,0 +1,72 @@
+#!/bin/bash
+
+host="http://localhost:3000"
+password="PASSWORD"
+
+function put_file()
+{
+	curl -F "file=@$1" -F $2 -F "password=$PASSWORD" $host
+}
+
+function put_text()
+{
+	curl -F "text=$1" -F $2 -F "password=$PASSWORD" $host
+}
+
+function usage()
+{
+	echo "Usage to upload a file:"
+	echo "\tmuon-up -f filename -o [visits|time] <parameter>"
+	echo "Usage to upload text:"
+	echo "\tmuon-up -t \"text\" -o [visits|time] <parameter>"
+	echo 
+	echo "Either 'visits' or 'time' is required as an option, plus a  
+	parameter specifying the amount of clicks or duration until the link
+	expires."
+}
+
+if readlink /proc/$$/fd/0 | grep -q "^pipe:"; then
+	echo "$0: If you call this script from a pipe, you need to call it with xargs(1)."
+	usage
+	exit 1
+fi
+
+if [ "$1" != '-f' -o "$1" != "-t" ]; then
+	usage
+	exit 1
+fi
+
+if [ -z "$2" ]; then
+	usage
+	exit 1
+fi
+
+if [ "$3" != '-o' ]; then
+	usage
+	exit 1
+fi
+
+if [ -z "$4" ]; then
+	usage
+	exit 1
+fi
+
+if [ -z "$5" ]; then
+	usage
+	exit 1
+fi
+
+if [ "$4" = "visits" ]; then
+	OPT="clicks"
+elif [ "$4" = "time" ]; then
+	OPT="duration"
+else
+	usage
+	exit 1
+fi
+
+if [ "$1" = "-f" ] ; then
+	put_file "@$2" "$OPT=$5"
+else
+	put_file "$2" "$OPT=$5"
+fi
